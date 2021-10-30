@@ -26,11 +26,11 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #define DEVICE_NAME_R                         "DrezBlueMicro_R"                         /**< Name of device. Will be included in the advertising data. */
 #define DEVICE_NAME_L                         "DrezBlueMicro_L"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_M                         "DrezBlueMicro"                         /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_M                         "DrezBlueMicro"                           /**< Name of device. Will be included in the advertising data. */
 
-#define DEVICE_MODEL                        "DrezBlueMicro"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_MODEL                        "DrezBlueMicro_V1"                          /**< Name of device. Will be included in the advertising data. */
 
-#define MANUFACTURER_NAME                   "Drez"         /**< Manufacturer. Will be passed to Device Information Service. */
+#define MANUFACTURER_NAME                   "keyboards.jpconstantineau.com"         /**< Manufacturer. Will be passed to Device Information Service. */
 
 
 #define KEYMAP( \

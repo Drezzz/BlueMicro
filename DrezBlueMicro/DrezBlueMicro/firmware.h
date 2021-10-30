@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau>
+Copyright 2018-2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -17,37 +17,48 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#ifndef KEYBOARD_CONFIG_H
-#define KEYBOARD_CONFIG_H
-#include "hardware_config.h"
-
-#define KEYBOARD_SIDE SINGLE
-
-
-#define DEVICE_NAME_R                         "DrezBlueMicro_R"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_L                         "DrezBlueMicro_L"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_M                         "DrezBlueMicro"                         /**< Name of device. Will be included in the advertising data. */
-
-#define DEVICE_MODEL                        "DrezBlueMicro"                          /**< Name of device. Will be included in the advertising data. */
-
-#define MANUFACTURER_NAME                   "Drez"         /**< Manufacturer. Will be passed to Device Information Service. */
-
-
-#define KEYMAP( \
-    	k00, k01, k02, k03, k04, k05, k06, k07, \
-    	k10, k11, k12, k13, k14, k15, k16, k17, \
-    	k20, k21, k22, k23, k24, k25, k26, k27, \
-    	k30, k31, k32, k33, k34, k35, k36, k37, \
-    	k40, k41, k42, k43, k44, k45, k46, k47 \
-) { \
-    { 	k00, k01, k02, k03, k04, k05, k06, k07 }, \
-    { 	k10, k11, k12, k13, k14, k15, k16, k17 }, \
-    { 	k20, k21, k22, k23, k24, k25, k26, k27 }, \
-    { 	k30, k31, k32, k33, k34, k35, k36, k37 }, \
-    { 	k40, k41, k42, k43, k44, k45, k46, k47 } \
-}
+#ifndef FIRMWARE_H
+#define FIRMWARE_H
+#undef min
+#undef max
+#include "firmware_config.h"
+#include "bluetooth_config.h"
+#include "keymap.h"
+#include "KeyScanner.h"
+#include "sleep.h"
+#include "bluetooth.h"
+#include "nrf52battery.h"
+#include "LedPwm.h"
+#include "LedRGB.h"
+#include "nrf52gpio.h"
+#include "datastructures.h"
+#include "debug_cli.h"
+#include "usb.h"
+#include "BlueMicro_display.h"
+#include "BlueMicro_tone.h"
+#include "combo_engine.h"
 
 
+    void setupConfig(void);
+    void loadConfig(void);
+    void saveConfig(void);
+    void resetConfig(void);
+    void setupMatrix(void);
+    void scanMatrix(void);
+    void sendKeyPresses(void);
+    void LowestPriorityloop(void);
+    void NormalPriorityloop(void);
+    void keyscantimer_callback(TimerHandle_t _handle);
+    void batterytimer_callback(TimerHandle_t _handle);
+    void RGBtimer_callback(TimerHandle_t _handle);
+    void addStringToQueue(const char* str);
+    void UpdateQueue(void);
+    void addKeycodeToQueue(const uint16_t keycode);
+    void addKeycodeToQueue(const uint16_t keycode, const uint8_t modifier);
+    void process_keyboard_function(uint16_t keycode);
+    #ifndef USER_MACRO_FUNCTION  
+    #define USER_MACRO_FUNCTION 1  
+    void process_user_macros(uint16_t macroid);
+    #endif
 
-
-#endif /* KEYBOARD_CONFIG_H */
+#endif /* FIRMWARE_H */

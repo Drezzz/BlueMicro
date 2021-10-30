@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau>
+Copyright 2020-2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -17,37 +17,38 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#ifndef KEYBOARD_CONFIG_H
-#define KEYBOARD_CONFIG_H
-#include "hardware_config.h"
-
-#define KEYBOARD_SIDE SINGLE
-
-
-#define DEVICE_NAME_R                         "DrezBlueMicro_R"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_L                         "DrezBlueMicro_L"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_M                         "DrezBlueMicro"                         /**< Name of device. Will be included in the advertising data. */
-
-#define DEVICE_MODEL                        "DrezBlueMicro"                          /**< Name of device. Will be included in the advertising data. */
-
-#define MANUFACTURER_NAME                   "Drez"         /**< Manufacturer. Will be passed to Device Information Service. */
-
-
-#define KEYMAP( \
-    	k00, k01, k02, k03, k04, k05, k06, k07, \
-    	k10, k11, k12, k13, k14, k15, k16, k17, \
-    	k20, k21, k22, k23, k24, k25, k26, k27, \
-    	k30, k31, k32, k33, k34, k35, k36, k37, \
-    	k40, k41, k42, k43, k44, k45, k46, k47 \
-) { \
-    { 	k00, k01, k02, k03, k04, k05, k06, k07 }, \
-    { 	k10, k11, k12, k13, k14, k15, k16, k17 }, \
-    { 	k20, k21, k22, k23, k24, k25, k26, k27 }, \
-    { 	k30, k31, k32, k33, k34, k35, k36, k37 }, \
-    { 	k40, k41, k42, k43, k44, k45, k46, k47 } \
-}
 
 
 
+#ifndef USB_H
+#define USB_H
 
-#endif /* KEYBOARD_CONFIG_H */
+    #include <bluefruit.h>
+    #include "firmware_config.h"
+    #include "keymap.h"
+    #include "datastructures.h"
+    #include "HID.h"
+
+    #ifdef NRF52840_XXAA  // only the 840 has USB available.
+        #ifdef ARDUINO_NRF52_ADAFRUIT
+            // do nothing since the Adafruit BSP doesn't support ediv.
+        #endif
+        #ifdef ARDUINO_NRF52_COMMUNITY
+            #include "Adafruit_TinyUSB.h"
+            #define TINYUSB_AVAILABLE 1
+        #endif
+    #endif
+
+
+
+    // these functions will be defined for all cases (nrf52832 and nrf52840) but will work differently.
+    void usb_setup();
+    bool usb_isConnected();
+    void usb_wakeup();
+    void usb_sendKeys(HIDKeyboard currentReport);
+    void usb_sendMediaKey(uint16_t keycode);
+    void usb_sendMouseKey(uint16_t keycode);
+    void usb_sendMouseMove(uint16_t keycode, uint16_t steps);
+    void hid_report_callback(uint8_t report_id, hid_report_type_t report_type, uint8_t const* buffer, uint16_t bufsize);
+
+#endif

@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau>
+Copyright 2020-2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -17,37 +17,16 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#ifndef KEYBOARD_CONFIG_H
-#define KEYBOARD_CONFIG_H
-#include "hardware_config.h"
-
-#define KEYBOARD_SIDE SINGLE
-
-
-#define DEVICE_NAME_R                         "DrezBlueMicro_R"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_L                         "DrezBlueMicro_L"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_M                         "DrezBlueMicro"                         /**< Name of device. Will be included in the advertising data. */
-
-#define DEVICE_MODEL                        "DrezBlueMicro"                          /**< Name of device. Will be included in the advertising data. */
-
-#define MANUFACTURER_NAME                   "Drez"         /**< Manufacturer. Will be passed to Device Information Service. */
-
-
-#define KEYMAP( \
-    	k00, k01, k02, k03, k04, k05, k06, k07, \
-    	k10, k11, k12, k13, k14, k15, k16, k17, \
-    	k20, k21, k22, k23, k24, k25, k26, k27, \
-    	k30, k31, k32, k33, k34, k35, k36, k37, \
-    	k40, k41, k42, k43, k44, k45, k46, k47 \
-) { \
-    { 	k00, k01, k02, k03, k04, k05, k06, k07 }, \
-    { 	k10, k11, k12, k13, k14, k15, k16, k17 }, \
-    { 	k20, k21, k22, k23, k24, k25, k26, k27 }, \
-    { 	k30, k31, k32, k33, k34, k35, k36, k37 }, \
-    { 	k40, k41, k42, k43, k44, k45, k46, k47 } \
-}
 
 
 
+#ifndef HID_H
+#define HID_H
+#include <bluefruit.h>
+#include "hid_keycodes.h"
+#include "advanced_keycodes.h"
 
-#endif /* KEYBOARD_CONFIG_H */
+uint16_t hid_GetMediaUsageCode(uint16_t keycode);
+
+
+#endif

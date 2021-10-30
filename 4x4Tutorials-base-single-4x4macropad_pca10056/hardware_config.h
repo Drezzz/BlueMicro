@@ -23,11 +23,11 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "hardware_variants.h"
 /* HARDWARE DEFINITION*/
 /* key matrix size */
-#define MATRIX_ROWS 4
-#define MATRIX_COLS 4
+#define MATRIX_ROWS 5
+#define MATRIX_COLS 8
 
-	#define MATRIX_ROW_PINS {7, 9, 10, 11}
-	#define MATRIX_COL_PINS {A4, A3, A2, A1}
+	#define MATRIX_ROW_PINS {A0, A2, A3, A4, A5}
+	#define MATRIX_COL_PINS {13, 12, 11, 10, 9, 7, 5, 2}
 
 #define BATTERY_TYPE BATT_CR2032
 #define VBAT_PIN  31

@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau>
+Copyright 2018-2021 <Pierre Constantineau, Julian Komaromy>
 
 3-Clause BSD License
 
@@ -17,37 +17,44 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#ifndef KEYBOARD_CONFIG_H
-#define KEYBOARD_CONFIG_H
-#include "hardware_config.h"
 
-#define KEYBOARD_SIDE SINGLE
+#ifndef DEBUG_CLI_H
+#define DEBUG_CLI_H
+
+#include <bluefruit.h>
+#include <Adafruit_LittleFS.h>
+#include <InternalFileSystem.h>
+
+#include <vector>
+#include <algorithm>
+#include "firmware.h"
+#include "firmware_config.h"
+#include "bluetooth_config.h"
+#include "nrf52battery.h"
+#include "nrf52gpio.h"
+#include "datastructures.h"
+
+typedef volatile uint32_t REG32;
+#define pREG32 (REG32 *)
+
+#define DEVICE_ID_HIGH    (*(pREG32 (0x10000060)))
+#define DEVICE_ID_LOW     (*(pREG32 (0x10000064)))
+#define MAC_ADDRESS_HIGH  (*(pREG32 (0x100000a8)))
+#define MAC_ADDRESS_LOW   (*(pREG32 (0x100000a4)))
+
+extern SoftwareTimer keyscantimer, batterytimer;
+extern Battery batterymonitor;
+extern PersistentState keyboardconfig;
+extern DynamicState keyboardstate;
+
+void gpiotester(void);
+void handleSerial(void);
+uint8_t testlink(uint8_t setpin, uint8_t readpin);
+void matrix_key_init_separator(bool singlekey);
+void matrix_key_init(bool singlekey);
+void matrix_key_end(bool singlekey);
+void matrix_key_test(bool singlekey);
+void helpline(void);
 
 
-#define DEVICE_NAME_R                         "DrezBlueMicro_R"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_L                         "DrezBlueMicro_L"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_M                         "DrezBlueMicro"                         /**< Name of device. Will be included in the advertising data. */
-
-#define DEVICE_MODEL                        "DrezBlueMicro"                          /**< Name of device. Will be included in the advertising data. */
-
-#define MANUFACTURER_NAME                   "Drez"         /**< Manufacturer. Will be passed to Device Information Service. */
-
-
-#define KEYMAP( \
-    	k00, k01, k02, k03, k04, k05, k06, k07, \
-    	k10, k11, k12, k13, k14, k15, k16, k17, \
-    	k20, k21, k22, k23, k24, k25, k26, k27, \
-    	k30, k31, k32, k33, k34, k35, k36, k37, \
-    	k40, k41, k42, k43, k44, k45, k46, k47 \
-) { \
-    { 	k00, k01, k02, k03, k04, k05, k06, k07 }, \
-    { 	k10, k11, k12, k13, k14, k15, k16, k17 }, \
-    { 	k20, k21, k22, k23, k24, k25, k26, k27 }, \
-    { 	k30, k31, k32, k33, k34, k35, k36, k37 }, \
-    { 	k40, k41, k42, k43, k44, k45, k46, k47 } \
-}
-
-
-
-
-#endif /* KEYBOARD_CONFIG_H */
+#endif /* DEBUG_CLI_H */

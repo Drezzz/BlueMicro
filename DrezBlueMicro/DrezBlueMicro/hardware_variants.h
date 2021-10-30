@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau>
+Copyright 2019-2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -17,37 +17,25 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#ifndef KEYBOARD_CONFIG_H
-#define KEYBOARD_CONFIG_H
-#include "hardware_config.h"
 
-#define KEYBOARD_SIDE SINGLE
+#ifndef HARDWAREVARIANTS_H
+#define HARDWAREVARIANTS_H
+#include "datastructures.h"
 
+// putting this here since it's called in every keyboard_config and we need this for all the keymaps.
+// THIS FILE CONTAINS THE MACRO DEFINITIONS THAT USERS MAY USE IN THEIR keymap.cpp/h FILES.
+// FOR DATASTRUCTURES USED BY USER FUNCTIONS, SEE datastructures.h
 
-#define DEVICE_NAME_R                         "DrezBlueMicro_R"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_L                         "DrezBlueMicro_L"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_M                         "DrezBlueMicro"                         /**< Name of device. Will be included in the advertising data. */
+#define NODIODES      0
+#define COL2ROW       1  // TODO: add automatic selection of ANTI-GHOSTING...
+#define ROW2COL       0
 
-#define DEVICE_MODEL                        "DrezBlueMicro"                          /**< Name of device. Will be included in the advertising data. */
+#define TEST 0
+#define LEFT 1
+#define RIGHT 2
+#define SINGLE 3
 
-#define MANUFACTURER_NAME                   "Drez"         /**< Manufacturer. Will be passed to Device Information Service. */
-
-
-#define KEYMAP( \
-    	k00, k01, k02, k03, k04, k05, k06, k07, \
-    	k10, k11, k12, k13, k14, k15, k16, k17, \
-    	k20, k21, k22, k23, k24, k25, k26, k27, \
-    	k30, k31, k32, k33, k34, k35, k36, k37, \
-    	k40, k41, k42, k43, k44, k45, k46, k47 \
-) { \
-    { 	k00, k01, k02, k03, k04, k05, k06, k07 }, \
-    { 	k10, k11, k12, k13, k14, k15, k16, k17 }, \
-    { 	k20, k21, k22, k23, k24, k25, k26, k27 }, \
-    { 	k30, k31, k32, k33, k34, k35, k36, k37 }, \
-    { 	k40, k41, k42, k43, k44, k45, k46, k47 } \
-}
-
-
-
-
-#endif /* KEYBOARD_CONFIG_H */
+#define KEYMAP2ARRAY(OTHERMACROHERE) {OTHERMACROHERE}
+#define ADDLAYER(LAYER_INPUT,METHOD_INPUT,KEYMAP_INPUT )  for (int row = 0; row < MATRIX_ROWS; ++row) { for (int col = 0; col < MATRIX_COLS; ++col){ matrix[row][col].addActivation(LAYER_INPUT, METHOD_INPUT, KEYMAP_INPUT[row][col]);}}
+#define _PINNUM(port, pin) ((port)*32 + (pin))
+#endif  /*HARDWAREVARIANTS_H*/

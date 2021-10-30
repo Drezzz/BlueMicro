@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau>
+Copyright 2018-2021 <Pierre Constantineau, Julian Komaromy>
 
 3-Clause BSD License
 
@@ -17,37 +17,41 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#ifndef KEYBOARD_CONFIG_H
-#define KEYBOARD_CONFIG_H
-#include "hardware_config.h"
+#include "KeyState.h"
+#include "advanced_keycodes.h"
+#include "hid_keycodes.h"
+#include <array>
+#include <utility>
 
-#define KEYBOARD_SIDE SINGLE
+#ifndef KEY_H
+#define KEY_H
 
+#ifndef MAX_NO_LAYERS
+#define MAX_NO_LAYERS 10 //6
+#endif
 
-#define DEVICE_NAME_R                         "DrezBlueMicro_R"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_L                         "DrezBlueMicro_L"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_M                         "DrezBlueMicro"                         /**< Name of device. Will be included in the advertising data. */
+typedef struct   {
+  uint16_t activations;
+  Duration durations __attribute__((packed)); 
+} KeyDefinition; 
 
-#define DEVICE_MODEL                        "DrezBlueMicro"                          /**< Name of device. Will be included in the advertising data. */
+using KeyDefinitionArray =  std::array<std::array<KeyDefinition, 5>, MAX_NO_LAYERS>;
 
-#define MANUFACTURER_NAME                   "Drez"         /**< Manufacturer. Will be passed to Device Information Service. */
+class Key {
+public:
+  // cppcheck-suppress noExplicitConstructor     // cannot make this an explicit constructor as we are relying on conversion of keycodes to uint32_t
+  Key(uint32_t activation);
 
+  void press(unsigned long currentMillis);
+  void clear(unsigned long currentMillis);
+  void addActivation(const uint8_t layer, const Method method, const uint32_t activation);
+  KeyDefinition getActiveActivation(uint8_t layer);
 
-#define KEYMAP( \
-    	k00, k01, k02, k03, k04, k05, k06, k07, \
-    	k10, k11, k12, k13, k14, k15, k16, k17, \
-    	k20, k21, k22, k23, k24, k25, k26, k27, \
-    	k30, k31, k32, k33, k34, k35, k36, k37, \
-    	k40, k41, k42, k43, k44, k45, k46, k47 \
-) { \
-    { 	k00, k01, k02, k03, k04, k05, k06, k07 }, \
-    { 	k10, k11, k12, k13, k14, k15, k16, k17 }, \
-    { 	k20, k21, k22, k23, k24, k25, k26, k27 }, \
-    { 	k30, k31, k32, k33, k34, k35, k36, k37 }, \
-    { 	k40, k41, k42, k43, k44, k45, k46, k47 } \
-}
+private:
+  Method lastMethod;
+  KeyDefinition lastActivation;
+  KeyState state;
+  KeyDefinitionArray keydefs;
+};
 
-
-
-
-#endif /* KEYBOARD_CONFIG_H */
+#endif /* KEY_H */

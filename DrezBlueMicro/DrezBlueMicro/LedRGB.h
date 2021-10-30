@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau>
+Copyright 2019-2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -17,37 +17,38 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#ifndef KEYBOARD_CONFIG_H
-#define KEYBOARD_CONFIG_H
-#include "hardware_config.h"
 
-#define KEYBOARD_SIDE SINGLE
+#ifndef LEDRGB_H
+#define LEDRGB_H
+#include <Arduino.h>
+#include "keyboard_config.h"
+#include "firmware_config.h"
 
+#include "hid_keycodes.h"
+#include "advanced_keycodes.h"
 
-#define DEVICE_NAME_R                         "DrezBlueMicro_R"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_L                         "DrezBlueMicro_L"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_M                         "DrezBlueMicro"                         /**< Name of device. Will be included in the advertising data. */
+#ifdef ARDUINO_NRF52_ADAFRUIT
+            // do nothing since the Adafruit BSP doesn't have NeoPixel included
+#endif
+#ifdef ARDUINO_NRF52_COMMUNITY
+    #include <Adafruit_NeoPixel.h>
+    #define NEOPIXEL_AVAILABLE 1
+#endif
 
-#define DEVICE_MODEL                        "DrezBlueMicro"                          /**< Name of device. Will be included in the advertising data. */
+  typedef struct rgb_color
+  {
+    unsigned char red, green, blue;
+    rgb_color() {};
+    rgb_color(uint8_t r, uint8_t g, uint8_t b) : red(r), green(g), blue(b) {};
+  } rgb_color;
 
-#define MANUFACTURER_NAME                   "Drez"         /**< Manufacturer. Will be passed to Device Information Service. */
+#ifdef ARDUINO_NRF52_COMMUNITY
+  extern Adafruit_NeoPixel pixels;
+#endif
 
+void setupRGB(void);
+void updateRGBmode(uint32_t mode);
+void updateRGB(unsigned long timesincelastkeypress);
+void suspendRGB(void);
 
-#define KEYMAP( \
-    	k00, k01, k02, k03, k04, k05, k06, k07, \
-    	k10, k11, k12, k13, k14, k15, k16, k17, \
-    	k20, k21, k22, k23, k24, k25, k26, k27, \
-    	k30, k31, k32, k33, k34, k35, k36, k37, \
-    	k40, k41, k42, k43, k44, k45, k46, k47 \
-) { \
-    { 	k00, k01, k02, k03, k04, k05, k06, k07 }, \
-    { 	k10, k11, k12, k13, k14, k15, k16, k17 }, \
-    { 	k20, k21, k22, k23, k24, k25, k26, k27 }, \
-    { 	k30, k31, k32, k33, k34, k35, k36, k37 }, \
-    { 	k40, k41, k42, k43, k44, k45, k46, k47 } \
-}
-
-
-
-
-#endif /* KEYBOARD_CONFIG_H */
+#endif
